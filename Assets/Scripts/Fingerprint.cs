@@ -13,6 +13,9 @@ public class Fingerprint : MonoBehaviour
     public Image topPrint;
     public Image midPrint;
     public Image botPrint;
+    public Image correctTopPrint;
+    public Image correctMidPrint;
+    public Image correctBotPrint;
     public Sprite[] fingerprintSpriteList;
     public Sprite[] fingerprintSprite1;
     public Sprite[] fingerprintSprite2;
@@ -22,21 +25,46 @@ public class Fingerprint : MonoBehaviour
     public Sprite[] fingerprintSprite6;
     public Sprite[] fingerprintSprite7;
     public Sprite[] fingerprintSprite8;
-    public Sprite[] topPrints;
-    public Sprite[] midPrints;
-    public Sprite[] botPrints;
     private int topPrintCount;
     private int midPrintCount;
     private int botPrintCount;
+    private int randomFingerprint;
 
     private void Start()
     {
+        randomFingerprint = UnityEngine.Random.Range(0, 7);
+
+        correctTopPrint.sprite = GetFingerprint(randomFingerprint, 0);
+        correctMidPrint.sprite = GetFingerprint(randomFingerprint, 1);
+        correctBotPrint.sprite = GetFingerprint(randomFingerprint, 2);
+
         topPrintCount = UnityEngine.Random.Range(0, fingerprintSpriteList.Count());
         midPrintCount = UnityEngine.Random.Range(0, fingerprintSpriteList.Count());
         botPrintCount = UnityEngine.Random.Range(0, fingerprintSpriteList.Count());
+
         topPrint.sprite = fingerprintSpriteList[topPrintCount];
         midPrint.sprite = fingerprintSpriteList[midPrintCount];
         botPrint.sprite = fingerprintSpriteList[botPrintCount];
+    }
+
+    private Sprite GetFingerprint(int finger, int index)
+    {
+        if (finger < 4)
+        {
+            return fingerprintSpriteList[finger + index * 4];
+        }
+        else
+        {
+            return fingerprintSpriteList[8 + finger + index * 4];
+        }
+    }
+
+    private void CheckFingerprint()
+    {
+        if (correctTopPrint.sprite == topPrint.sprite && correctMidPrint.sprite == midPrint.sprite && correctBotPrint.sprite == botPrint.sprite)
+        {
+            Debug.Log("Puzzle solved");
+        }
     }
 
     public void ChangeTopPrintUp()
@@ -50,6 +78,7 @@ public class Fingerprint : MonoBehaviour
             topPrintCount += 1;
         }
         topPrint.sprite = fingerprintSpriteList[topPrintCount];
+        CheckFingerprint();
     }
     public void ChangeMidPrintUp()
     {
@@ -62,6 +91,7 @@ public class Fingerprint : MonoBehaviour
             midPrintCount += 1;
         }
         midPrint.sprite = fingerprintSpriteList[midPrintCount];
+        CheckFingerprint();
     }
     public void ChangeBotPrintUp()
     {
@@ -74,6 +104,7 @@ public class Fingerprint : MonoBehaviour
             botPrintCount += 1;
         }
         botPrint.sprite = fingerprintSpriteList[botPrintCount];
+        CheckFingerprint();
     }
     public void ChangeTopPrintDown()
     {
@@ -86,6 +117,7 @@ public class Fingerprint : MonoBehaviour
             topPrintCount -= 1;
         }
         topPrint.sprite = fingerprintSpriteList[topPrintCount];
+        CheckFingerprint();
     }
     public void ChangeMidPrintDown()
     {
@@ -98,6 +130,7 @@ public class Fingerprint : MonoBehaviour
             midPrintCount -= 1;
         }
         midPrint.sprite = fingerprintSpriteList[midPrintCount];
+        CheckFingerprint();
     }
     public void ChangeBotPrintDown()
     {
@@ -110,5 +143,6 @@ public class Fingerprint : MonoBehaviour
             botPrintCount -= 1;
         }
         botPrint.sprite = fingerprintSpriteList[botPrintCount];
+        CheckFingerprint();
     }
 }
