@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    [SerializeField] float mouseSensitivity = 100f;
-
+    public float mouseSensitivity = 100f;
     public Transform playerBody;
-
     float xRotation = 0f;
+    private bool cursorLocked = false;
+
+    private Alteruna.Avatar _avatar;
 
     void Start()
     {
+        _avatar = GetComponent<Alteruna.Avatar>();
+
+        if (!_avatar.IsMe) 
+        return;
+
         Cursor.lockState = CursorLockMode.Locked;
+        cursorLocked = true;
     }
 
     void Update()
@@ -25,5 +32,15 @@ public class MouseLook : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         playerBody.Rotate(Vector3.up * mouseX);
+
+        if (Input.GetKeyDown(KeyCode.Escape) && cursorLocked)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            cursorLocked = false;
+        }
+        else{
+            Cursor.lockState = CursorLockMode.Locked;
+            cursorLocked = true;
+        }
     }
 }

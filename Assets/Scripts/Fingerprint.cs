@@ -17,14 +17,7 @@ public class Fingerprint : MonoBehaviour
     public Image correctMidPrint;
     public Image correctBotPrint;
     public Sprite[] fingerprintSpriteList;
-    public Sprite[] fingerprintSprite1;
-    public Sprite[] fingerprintSprite2;
-    public Sprite[] fingerprintSprite3;
-    public Sprite[] fingerprintSprite4;
-    public Sprite[] fingerprintSprite5;
-    public Sprite[] fingerprintSprite6;
-    public Sprite[] fingerprintSprite7;
-    public Sprite[] fingerprintSprite8;
+    public GameObject buttons;
     private int topPrintCount;
     private int midPrintCount;
     private int botPrintCount;
@@ -61,9 +54,11 @@ public class Fingerprint : MonoBehaviour
 
     private void CheckFingerprint()
     {
-        if (correctTopPrint.sprite == topPrint.sprite && correctMidPrint.sprite == midPrint.sprite && correctBotPrint.sprite == botPrint.sprite)
+        if (correctTopPrint.sprite == topPrint.sprite && correctMidPrint.sprite == midPrint.sprite &&
+        correctBotPrint.sprite == botPrint.sprite)
         {
             Debug.Log("Puzzle solved");
+            buttons.SetActive(false);
         }
     }
 
