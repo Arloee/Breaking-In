@@ -1,29 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private int money = 0;
-    public TextMeshProUGUI moneyText;
-
-    public void UpdateMoney(int moneyToAdd){
-        money += moneyToAdd;
-        moneyText.text = "Money: " + money + "$";
-        Debug.Log(moneyText.text);
-    }
-    // Start is called before the first frame update
-    void Start()
+    public void QuitApp()
     {
-        
+        Application.Quit();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void BackToMenu()
     {
-        
+        SceneManager.LoadScene(0);
+    }
+    
+    public void ToGame()
+    {
+        SceneManager.LoadScene(1);
     }
 }

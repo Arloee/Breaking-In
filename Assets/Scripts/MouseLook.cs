@@ -10,6 +10,7 @@ public class MouseLook : MonoBehaviour
     float xRotation = 0f;
     private bool cursorLocked = false;
     private Alteruna.Avatar _avatar;
+    private GameObject menu;
 
     void Start()
     {
@@ -17,6 +18,7 @@ public class MouseLook : MonoBehaviour
 
         if (!_avatar.IsMe) return;
 
+        menu = GameObject.FindGameObjectWithTag("Menu");
         Cursor.lockState = CursorLockMode.Locked;
         cursorLocked = true;
         crosshair.SetActive(true);
@@ -24,6 +26,8 @@ public class MouseLook : MonoBehaviour
 
     void Update()
     {
+        if (!_avatar.IsMe) return;
+
         if (cursorLocked)
         {
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
@@ -43,12 +47,15 @@ public class MouseLook : MonoBehaviour
                 Cursor.lockState = CursorLockMode.None;
                 cursorLocked = false;
                 crosshair.SetActive(false);
+                menu.SetActive(true);
+                menu.transform.Find("PauseMenuUI").gameObject.SetActive(true);
             }
             else
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 cursorLocked = true;
                 crosshair.SetActive(true);
+                menu.SetActive(false);
             }
         }
     }

@@ -9,12 +9,14 @@ public class PlayerInteract : AttributesSync
     public Alteruna.Avatar avatar;
     public int range = 10;
     [SerializeField] private LayerMask interactableLayer;
-    GameManager gmScript;
+    PlayerUI uiScript;
     private int moneyToAdd;
 
     void Start()
     {
-        gmScript = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        if (!avatar.IsMe) return;
+
+        uiScript = GameObject.FindGameObjectWithTag("PlayerUI").GetComponent<PlayerUI>();
     }
 
     void Update()
@@ -26,15 +28,21 @@ public class PlayerInteract : AttributesSync
             Interact();
         }
     }
-
+    
     void Interact()
     {
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit,
         range, interactableLayer))
         {
             moneyToAdd = 100;
-            Destroy(hit.transform.gameObject);
-            gmScript.UpdateMoney(moneyToAdd);
+            BroadcastRemoteMethod("CollectMoney", hit);
+            uiScript.BroadcastRemoteMethod("UpdateMoney", moneyToAdd);
         }
+    }
+
+    [SynchronizableMethod]
+    public void CollectMoney(RaycastHit hit)
+    {
+        Destroy(hit.transform.gameObject);
     }
 }
