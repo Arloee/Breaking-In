@@ -10,6 +10,7 @@ public class PlayerInteract : AttributesSync
     public int range = 10;
     [SerializeField] private LayerMask interactableLayer;
     PlayerUI uiScript;
+    MoneySpawner gmScript;
     private int moneyToAdd;
 
     void Start()
@@ -17,6 +18,7 @@ public class PlayerInteract : AttributesSync
         if (!avatar.IsMe) return;
 
         uiScript = GameObject.FindGameObjectWithTag("PlayerUI").GetComponent<PlayerUI>();
+        gmScript = GameObject.FindGameObjectWithTag("GameManager").GetComponent<MoneySpawner>();
     }
 
     void Update()
@@ -28,21 +30,15 @@ public class PlayerInteract : AttributesSync
             Interact();
         }
     }
-    
+
     void Interact()
     {
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit,
         range, interactableLayer))
         {
             moneyToAdd = 100;
-            BroadcastRemoteMethod("CollectMoney", hit);
+            gmScript.BroadcastRemoteMethod("DespawnMoney", hit.transform.gameObject);
             uiScript.BroadcastRemoteMethod("UpdateMoney", moneyToAdd);
         }
-    }
-
-    [SynchronizableMethod]
-    public void CollectMoney(RaycastHit hit)
-    {
-        Destroy(hit.transform.gameObject);
     }
 }
