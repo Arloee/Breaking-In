@@ -7,14 +7,12 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
-
     public float speed = 12f;
     public float gravity = -9.81f;
 
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
-
     Vector3 velocity;
     bool isGrounded;
 
@@ -28,8 +26,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
 
-        if(!_avatar.IsMe)
-        return;
+        if(!_avatar.IsMe) return;
         
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 

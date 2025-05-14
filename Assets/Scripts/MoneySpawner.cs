@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Alteruna;
 using Unity.VisualScripting;
+using System.Runtime.CompilerServices;
 
 public class MoneySpawner : AttributesSync
 {
     private Alteruna.Avatar _avatar;
-    private bool hasSpawned = false;
     private Spawner _spawner;
+    private List<string> servers = new List<string>();
+
     public Vector3[] positions = new Vector3[5]
     {
         new Vector3(5, 5, 0),
@@ -33,22 +35,38 @@ public class MoneySpawner : AttributesSync
 
     public void SpawnMoney()
     {
-        if (!hasSpawned)
+        for (int i = 0; i < 5; i++)
         {
-            for (int i = 0; i < 5; i++)
+            Vector3 currentPosition = positions[i];
+            Vector3 currentRotation = rotation[i];
+            _spawner.Spawn(0, currentPosition, currentRotation, new Vector3(20, 10, 0.5f));
+            Debug.Log(i);
+        }
+    }
+
+    public void GetRoom(Multiplayer multiplayer, Room room, User user)
+    {
+        bool noMatches = true;
+
+        foreach (string server in servers)
+        {
+            if (room.Name == server)
             {
-                Vector3 currentPosition = positions[i];
-                Vector3 currentRotation = rotation[i];
-                _spawner.Spawn(0, currentPosition, currentRotation, new Vector3(20, 10, 0.5f));
-                Debug.Log(i);
-                if (i == 4) hasSpawned = true;
+                noMatches = false;
+                break;
             }
+        }
+
+        if (noMatches)
+        {
+            servers.Add(room.Name);
+            SpawnMoney();
         }
     }
 
     [SynchronizableMethod]
-    void DespawnMoney(GameObject money)
+    void DespawnMoney(RaycastHit money)
     {
-        _spawner.Despawn(money);
+        _spawner.Despawn(money.transform.gameObject);
     }
 }

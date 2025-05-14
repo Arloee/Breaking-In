@@ -37,7 +37,7 @@ public class PlayerInteract : AttributesSync
         range, interactableLayer))
         {
             moneyToAdd = 100;
-            gmScript.BroadcastRemoteMethod("DespawnMoney", hit.transform.gameObject);
+            gmScript.BroadcastRemoteMethod("DespawnMoney", hit);
             uiScript.BroadcastRemoteMethod("UpdateMoney", moneyToAdd);
         }
     }
