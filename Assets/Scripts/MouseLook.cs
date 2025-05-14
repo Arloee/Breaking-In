@@ -11,6 +11,7 @@ public class MouseLook : MonoBehaviour
     private bool cursorLocked = false;
     private Alteruna.Avatar _avatar;
     private GameObject menu;
+    private bool fingerprintIsOn = false;
 
     void Start()
     {
@@ -44,19 +45,53 @@ public class MouseLook : MonoBehaviour
         {
             if (cursorLocked)
             {
-                Cursor.lockState = CursorLockMode.None;
-                cursorLocked = false;
-                crosshair.SetActive(false);
-                menu.SetActive(true);
-                menu.transform.Find("PauseMenuUI").gameObject.SetActive(true);
+                if (!fingerprintIsOn)
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    cursorLocked = false;
+                    crosshair.SetActive(false);
+                    menu.SetActive(true);
+                    menu.transform.Find("PauseMenuUI").gameObject.SetActive(true);
+                }
+                else
+                {
+                    FingerPrintOff();
+                }
             }
             else
             {
-                Cursor.lockState = CursorLockMode.Locked;
-                cursorLocked = true;
-                crosshair.SetActive(true);
-                menu.SetActive(false);
+                if (!fingerprintIsOn)
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                    cursorLocked = true;
+                    crosshair.SetActive(true);
+                    menu.SetActive(false);
+                }
+                else
+                {
+                    FingerPrintOff();
+                }
             }
         }
+    }
+
+    public void FingerPrintToggle()
+    {
+        fingerprintIsOn = !fingerprintIsOn;
+        if (fingerprintIsOn)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            cursorLocked = false;
+            crosshair.SetActive(false);
+        }
+    }
+
+    public void FingerPrintOff()
+    {
+        GameObject.FindGameObjectWithTag("FingerprintUI").transform.Find("FingerprintPanel").gameObject.SetActive(false);
+        FingerPrintToggle();
+        Cursor.lockState = CursorLockMode.Locked;
+        cursorLocked = true;
+        crosshair.SetActive(true);
     }
 }

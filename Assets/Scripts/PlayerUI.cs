@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Alteruna;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerUI : AttributesSync
 {
@@ -13,7 +14,29 @@ public class PlayerUI : AttributesSync
     [SynchronizableMethod]
     public void UpdateMoney(int moneyToAdd)
     {
-        money += moneyToAdd;
-        moneyText.text = "Money: " + money + "$";
+        if(money < 1000)
+        {
+            money += moneyToAdd;
+            moneyText.text = "Money: " + money + "$";
+        }
+    }
+
+    [SynchronizableMethod]
+    public void UpdateMoneySafe()
+    {
+        if (money < 1000)
+        {
+            money += 250;
+            moneyText.text = "Money: " + money + "$";
+        }
+    }
+
+    [SynchronizableMethod]
+    public void Escape()
+    {
+        if(money >= 1000)
+        {
+            SceneManager.LoadScene(2);
+        }
     }
 }

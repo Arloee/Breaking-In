@@ -10,21 +10,22 @@ public class MoneySpawner : AttributesSync
     private Alteruna.Avatar _avatar;
     private Spawner _spawner;
     private List<string> servers = new List<string>();
+    [SynchronizableField] private bool spawned = false;
 
-    public Vector3[] positions = new Vector3[5]
+    private Vector3[] positions = new Vector3[5]
     {
-        new Vector3(5, 5, 0),
-        new Vector3(4, 4, 0),
-        new Vector3(3, 3, 0),
-        new Vector3(2, 2, 0),
-        new Vector3(1, 1, 0)
+        new Vector3(-16.97532f, 1.642087f, 54),
+        new Vector3(-2.29f, 1.623f, 49.353f),
+        new Vector3(-3.579f, 1.014f, 49.353f),
+        new Vector3(-0.511f, 2.274f, 49.063f),
+        new Vector3(0.446f, 2.34f, 39.988f)
     };
-    public Vector3[] rotation = new Vector3[5]{
-        new Vector3(1, 0, 0),
-        new Vector3(0, 2, 0),
-        new Vector3(3, 1, 0),
-        new Vector3(-1, 0, 0),
-        new Vector3(0, 0, 5)
+    private Vector3[] rotation = new Vector3[5]{
+        new Vector3(-90, 0, 90),
+        new Vector3(-90, -90, 90),
+        new Vector3(-90, -90, 90),
+        new Vector3(-90, 90, 90),
+        new Vector3(-90, 180, 90)
     };
 
     private void Awake()
@@ -35,32 +36,15 @@ public class MoneySpawner : AttributesSync
 
     public void SpawnMoney()
     {
-        for (int i = 0; i < 5; i++)
+        if (spawned == false)
         {
-            Vector3 currentPosition = positions[i];
-            Vector3 currentRotation = rotation[i];
-            _spawner.Spawn(0, currentPosition, currentRotation, new Vector3(20, 10, 0.5f));
-            Debug.Log(i);
-        }
-    }
-
-    public void GetRoom(Multiplayer multiplayer, Room room, User user)
-    {
-        bool noMatches = true;
-
-        foreach (string server in servers)
-        {
-            if (room.Name == server)
+            for (int i = 0; i < 5; i++)
             {
-                noMatches = false;
-                break;
+                Vector3 currentPosition = positions[i];
+                Vector3 currentRotation = rotation[i];
+                _spawner.Spawn(0, currentPosition, currentRotation, new Vector3(20, 10, 0.5f));
             }
-        }
-
-        if (noMatches)
-        {
-            servers.Add(room.Name);
-            SpawnMoney();
+            spawned = true;
         }
     }
 

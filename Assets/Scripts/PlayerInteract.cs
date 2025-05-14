@@ -36,9 +36,22 @@ public class PlayerInteract : AttributesSync
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit,
         range, interactableLayer))
         {
-            moneyToAdd = 100;
-            gmScript.BroadcastRemoteMethod("DespawnMoney", hit);
-            uiScript.BroadcastRemoteMethod("UpdateMoney", moneyToAdd);
+            if (hit.transform.gameObject.name.Contains("Dollar"))
+            {
+                moneyToAdd = 100;
+                gmScript.BroadcastRemoteMethod("DespawnMoney", hit);
+                uiScript.BroadcastRemoteMethod("UpdateMoney", moneyToAdd);
+            }
+            else if (hit.transform.gameObject.name.Contains("Safe"))
+            {
+                GameObject.FindGameObjectWithTag("FingerprintUI").transform.Find("FingerprintPanel").gameObject.SetActive(true);
+                GameObject.FindGameObjectWithTag("FingerprintUI").GetComponentInChildren<Fingerprint>().StartFingerprint();
+                transform.parent.GetComponentInChildren<MouseLook>().FingerPrintToggle();
+            }
+            else if (hit.transform.gameObject.name.Contains("Car"))
+            {
+                uiScript.BroadcastRemoteMethod("Escape");
+            }
         }
     }
 }

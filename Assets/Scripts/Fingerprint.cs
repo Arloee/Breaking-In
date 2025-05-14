@@ -22,8 +22,9 @@ public class Fingerprint : MonoBehaviour
     private int midPrintCount;
     private int botPrintCount;
     private int randomFingerprint;
+    private Alteruna.Avatar _avatar;
 
-    private void Start()
+    public void StartFingerprint()
     {
         randomFingerprint = UnityEngine.Random.Range(0, 7);
 
@@ -57,8 +58,8 @@ public class Fingerprint : MonoBehaviour
         if (correctTopPrint.sprite == topPrint.sprite && correctMidPrint.sprite == midPrint.sprite &&
         correctBotPrint.sprite == botPrint.sprite)
         {
-            Debug.Log("Puzzle solved");
             buttons.SetActive(false);
+            GameObject.FindGameObjectWithTag("PlayerUI").GetComponent<PlayerUI>().BroadcastRemoteMethod("UpdateMoneySafe");
         }
     }
 
