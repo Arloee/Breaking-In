@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO.Ports;
+using Alteruna;
+using Unity.VisualScripting;
 
-public class OpenDoor : MonoBehaviour
+public class OpenDoor : AttributesSync
 {
- private SerialPort serialPort;
+    private SerialPort serialPort;
     public string portName = "COM3";
     public int baudRate = 9600;
 
     public float openAngle = 90f;
     public float openSpeed = 2f;
-    public bool isOpen = false;
+    [SynchronizableField] public bool isOpen = false;
 
     private Quaternion closedRotation;
     private Quaternion openRotation;
@@ -37,8 +39,7 @@ public class OpenDoor : MonoBehaviour
                 if (message.Contains("WIN"))
                 {
                     Debug.Log("Spiller vandt i Arduino-spillet!");
-                    if (currentCoroutine != null) StopCoroutine(currentCoroutine);
-                    currentCoroutine = StartCoroutine(ToggleDoor());
+                    BroadcastRemoteMethod("OpenDoorRPC");
                 }
                 else if (message.Contains("LOSE"))
                 {
@@ -49,17 +50,10 @@ public class OpenDoor : MonoBehaviour
         }
     }
 
-    private IEnumerator ToggleDoor()
+[SynchronizableMethod]
+    public void OpenDoorRPC()
     {
-        Quaternion targetRotation = isOpen ? closedRotation : openRotation;
-        isOpen = !isOpen;
-
-        while(Quaternion.Angle(transform.rotation, targetRotation) > 0.01f)
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * openSpeed);
-            yield return null;
-        }
-        transform.rotation = targetRotation;
+        transform.Find("Door").Find("Collider").gameObject.SetActive(false);
     }
 
     void OnDestroy()

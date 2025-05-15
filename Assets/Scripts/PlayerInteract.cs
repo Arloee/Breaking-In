@@ -50,6 +50,7 @@ public class PlayerInteract : AttributesSync
             }
             else if (hit.transform.gameObject.name.Contains("Car"))
             {
+                Cursor.lockState = CursorLockMode.None;
                 uiScript.BroadcastRemoteMethod("Escape");
             }
         }
